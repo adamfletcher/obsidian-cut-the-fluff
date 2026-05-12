@@ -21,6 +21,7 @@ interface CutTheFluffPluginSettings {
 	enableRulesetJargon: boolean,
 	enableRulesetComplexity: boolean,
 	enableRulesetRedundancies: boolean,
+	enableRulesetAiSlop: boolean,
 
 }
 
@@ -31,6 +32,7 @@ const DEFAULT_SETTINGS: CutTheFluffPluginSettings = {
 	enableRulesetJargon: true,
 	enableRulesetComplexity: true,
 	enableRulesetRedundancies: true,
+	enableRulesetAiSlop: false,
 	customWordList: ''
 }
 
@@ -76,6 +78,7 @@ export default class CutTheFluffPlugin extends Plugin {
 			...(this.settings.enableRulesetJargon ? [RuleType.Jargon] : []),
 			...(this.settings.enableRulesetComplexity ? [RuleType.Complexity] : []),
 			...(this.settings.enableRulesetRedundancies ? [RuleType.Redundancy] : []),
+			...(this.settings.enableRulesetAiSlop ? [RuleType.AiSlop] : []),
 		];
 
 		this.rules.resetCustomRules();
@@ -330,7 +333,16 @@ class CutTheFluggSettingsTab extends PluginSettingTab {
 					this.plugin.settings.enableRulesetRedundancies = value;
 					await this.plugin.saveSettings();
 				}));
-
+		
+		new Setting(containerEl)
+			.setName('AI Slop')
+			.setDesc('')
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.enableRulesetAiSlop) // Set the initial state of the toggle from loaded settings
+				.onChange(async (value) => { // This function runs whenever the toggle is changed
+					this.plugin.settings.enableRulesetAiSlop = value;
+					await this.plugin.saveSettings();
+				}));
 
 		/*
 		new Setting(containerEl)

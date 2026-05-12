@@ -10,7 +10,8 @@ export const enum RuleType {
     Jargon = "Jaron",
     Complexity = "Complexity",
     Redundancy = "Redudancy",
-    Custom = "Custom"
+    Custom = "Custom",
+    AiSlop = "AiSlop"
 }
 
 export class Rule {
@@ -117,6 +118,21 @@ export class Rules {
         this.addRule(new Rule(RuleType.Redundancy, "in the event that"));
         this.addRule(new Rule(RuleType.Redundancy, "one and the same", 0, 8));
         this.addRule(new Rule(RuleType.Redundancy, "final conclusion", 0, 6));
+
+        this.addRule(new Rule(RuleType.AiSlop, "doing real work"));
+        this.addRule(new Rule(RuleType.AiSlop, "genuine tension"));
+        this.addRule(new Rule(RuleType.AiSlop, "load-bearing"));
+        this.addRule(new Rule(RuleType.AiSlop, "load bearing"));
+        this.addRule(new Rule(RuleType.AiSlop, "that distinction matters"));
+        this.addRule(new Rule(RuleType.AiSlop, "delve"));
+        this.addRule(new Rule(RuleType.AiSlop, "tapestry"));
+        this.addRule(new Rule(RuleType.AiSlop, "landscape"));
+        this.addRule(new Rule(RuleType.AiSlop, "here's the thing"));
+        this.addRule(new Rule(RuleType.AiSlop, "think of it"));
+        this.addRule(new Rule(RuleType.AiSlop, "unpack"));
+        this.addRule(new Rule(RuleType.AiSlop, "let's explore"));
+        this.addRule(new Rule(RuleType.AiSlop, "break it down"));
+        this.addRule(new Rule(RuleType.AiSlop, "pivotal"));
 
     }
 
