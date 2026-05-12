@@ -53,9 +53,9 @@ export default class CutTheFluffPlugin extends Plugin {
 		this.addCommand({
 			id: 'toggle',
 			name: 'Toggle highlighting',
-			callback: () => {
+			callback: async () => {
 				this.settings.enabled = !this.settings.enabled;
-				this.saveSettings();
+				await this.saveSettings();
 			}
 		});
 
@@ -367,7 +367,6 @@ class CutTheFluggSettingsTab extends PluginSettingTab {
 	}
 }
 
-	}
 
 
 
