@@ -111,7 +111,7 @@ export default class CutTheFluffPlugin extends Plugin {
 		await this.saveData(this.settings);
 		this.buildRegex();
 		this.forceViewUpdate = true;
-		document.body.classList.toggle('cut-the-fluff-active', this.settings.enabled);
+		activeDocument.body.classList.toggle('cut-the-fluff-active', this.settings.enabled);
 		this.app.workspace.updateOptions();
 	}
 
