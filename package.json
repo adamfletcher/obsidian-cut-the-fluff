@@ -1,6 +1,6 @@
 {
 	"name": "cut-the-fluff",
-	"version": "0.1.6",
+	"version": "0.2.0",
 	"description": "Make your writing clearer by checking for unnecessary complexity and clutter.",
 	"main": "main.js",
 	"scripts": {
