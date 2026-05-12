@@ -155,7 +155,6 @@ export default class CutTheFluffPlugin extends Plugin {
 				}
 
 				const builder = new RangeSetBuilder<Decoration>();
-				const text = view.state.doc.toString();
 
 				// Skip highlighting inside code blocks, comments, etc.
 
@@ -368,6 +367,7 @@ class CutTheFluggSettingsTab extends PluginSettingTab {
 	}
 }
 
+	}
 
 
 
