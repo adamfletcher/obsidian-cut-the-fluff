@@ -11,6 +11,10 @@ Examples:
 * **Unnecessary complexity or clutter** (eg. ~~utilise~~ -> use, ~~in regard to~~ -> about, ~~it is interesting to note~~)
 * **Redundancies** (~~each and~~ every, ~~one and~~ the same, ~~final~~ conclusion, combine ~~together~~)
 
+## Installation
+
+Install via the [Obsidian Plugins Directory](https://community.obsidian.md/plugins/cut-the-fluff)
+
 ## Privacy
 
 All processing happens locally on your device. Your text or any other data is never sent to a remote server by this plugin. 
