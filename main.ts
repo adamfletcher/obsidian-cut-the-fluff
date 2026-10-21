@@ -116,31 +116,29 @@ export default class CutTheFluffPlugin extends Plugin {
 	}
 
 	createViewPlugin() {
-		const plugin = this;
-
 		class CutTheFluffViewPlugin implements PluginValue {
 			decorations: DecorationSet;
 
-			constructor(view: EditorView) {
+			constructor(view: EditorView, private readonly plugin: CutTheFluffPlugin) {
 				this.decorations = this.buildDecorations(view);
 			}
 
 			update(update: ViewUpdate) {
-				if (update.docChanged || update.viewportChanged || plugin.forceViewUpdate) {
+				if (update.docChanged || update.viewportChanged || this.plugin.forceViewUpdate) {
 					this.decorations = this.buildDecorations(update.view);
-					plugin.forceViewUpdate = false;
+					this.plugin.forceViewUpdate = false;
 				}
 			}
 
 			buildDecorations(view: EditorView): DecorationSet {
 
-				if (!plugin.settings.enabled || plugin.regex == null) {
+				if (!this.plugin.settings.enabled || this.plugin.regex == null) {
 					return Decoration.none;
 				}
 
 				let formattingClass: string;
 
-				switch (plugin.settings.highlightStyle) {
+				switch (this.plugin.settings.highlightStyle) {
 					case 'dim':
 						formattingClass = ' fluff-dim';
 						break;
@@ -184,15 +182,15 @@ export default class CutTheFluffPlugin extends Plugin {
 
 
 					
-					plugin.regex.lastIndex = 0; // Important
+					this.plugin.regex.lastIndex = 0; // Important
 
 					const doc = view.state.doc
 
 					const visibleText = doc.sliceString(from, to);
 
-					while ((match = plugin.regex.exec(visibleText)) !== null) {
+					while ((match = this.plugin.regex.exec(visibleText)) !== null) {
 
-						const matchingRule: Rule = plugin.rules.getRuleByMatchString(match[0]);
+						const matchingRule: Rule = this.plugin.rules.getRuleByMatchString(match[0]);
 
 						let start: number;
 						start = match.index + from + matchingRule.highlightOffset;
@@ -223,7 +221,7 @@ export default class CutTheFluffPlugin extends Plugin {
 			}
 		}
 
-		return ViewPlugin.fromClass(CutTheFluffViewPlugin, {
+		return ViewPlugin.define(view => new CutTheFluffViewPlugin(view, this), {
 			decorations: (value: CutTheFluffViewPlugin) => value.decorations,
 		});
 	}

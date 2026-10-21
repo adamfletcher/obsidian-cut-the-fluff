@@ -4,6 +4,7 @@ const { createRequire } = require('node:module');
 const { join } = require('node:path');
 const vm = require('node:vm');
 const esbuild = require('esbuild');
+const { EditorState } = require('@codemirror/state');
 
 const root = join(__dirname, '..');
 const sourceRequire = createRequire(join(root, 'main.ts'));
@@ -66,4 +67,59 @@ test('closing settings reports a failed save without rejecting', async () => {
     assert.deepEqual(notices, ['Cut The Fluff: could not save settings. Please try again.']);
     assert.equal(errors.length, 1);
     assert.equal(errors[0][1], failure);
+});
+
+function editorView(text) {
+    return {
+        state: EditorState.create({ doc: text }),
+        visibleRanges: [{ from: 0, to: text.length }],
+    };
+}
+
+function highlights(editor) {
+    const ranges = [];
+    editor.decorations.between(0, 1000, (from, to, decoration) => {
+        ranges.push([from, to, decoration.spec.class]);
+    });
+    return ranges;
+}
+
+test('highlighting responds to style, custom rule and enabled settings', async () => {
+    const { plugin } = await loadPlugin();
+    const view = editorView('very clear prose');
+    const editor = plugin.createViewPlugin().create(view);
+    const update = () => editor.update({ view, docChanged: false, viewportChanged: false });
+    assert.deepEqual(highlights(editor), [[0, 4, 'fluff fluff-dim']]);
+
+    plugin.settings.highlightStyle = 'wavy-underline';
+    plugin.settings.customWordList = 'clear';
+    await plugin.saveSettings();
+    update();
+    assert.deepEqual(highlights(editor), [
+        [0, 4, 'fluff fluff-wavy-underline'],
+        [5, 10, 'fluff fluff-wavy-underline'],
+    ]);
+
+    plugin.settings.enabled = false;
+    await plugin.saveSettings();
+    update();
+    assert.deepEqual(highlights(editor), []);
+
+    plugin.settings.enabled = true;
+    plugin.settings.highlightStyle = 'none';
+    await plugin.saveSettings();
+    update();
+    assert.deepEqual(highlights(editor), [[0, 4, 'fluff'], [5, 10, 'fluff']]);
+});
+
+test('highlighting responds to document and viewport changes', async () => {
+    const { plugin } = await loadPlugin();
+    const editor = plugin.createViewPlugin().create(editorView('very clear'));
+    const view = editorView('clear really');
+    editor.update({ view, docChanged: true, viewportChanged: false });
+    assert.deepEqual(highlights(editor), [[6, 12, 'fluff fluff-dim']]);
+
+    view.visibleRanges = [{ from: 0, to: 5 }];
+    editor.update({ view, docChanged: false, viewportChanged: true });
+    assert.deepEqual(highlights(editor), []);
 });
