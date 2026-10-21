@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
+import { App, Notice, Plugin, PluginSettingTab, Setting, TextAreaComponent } from 'obsidian';
 import {
 	ViewUpdate,
 	PluginValue,
@@ -237,8 +237,11 @@ class CutTheFluggSettingsTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
-	async hide(): Promise<void> {
-		await this.plugin.saveSettings();
+	hide(): void {
+		this.plugin.saveSettings().catch((error: unknown) => {
+			console.error('Cut The Fluff: failed to save settings', error);
+			new Notice('Cut The Fluff: could not save settings. Please try again.');
+		});
 	}
 
 	display(): void {
